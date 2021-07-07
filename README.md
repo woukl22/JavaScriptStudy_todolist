@@ -32,7 +32,7 @@ JavaScript self-study
 
 
 # Study Log
-2021.07.05 *Mon.* ~Chapter 04-1 배열, todolist.html upload(2021.07.07)
+*2021.07.05 Mon.* ~Chapter 04-1 배열, todolist.html upload(2021.07.07)
   - ***switch 조건문**을 사용하여 기능 수행*
   - ***할 일 목록**을 배열로 만들어 push()와 splice()를 이용하여 목록 추가, 제거*
 
