@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+<title></title>
+<script>
+const todos = []
+
+let state = true
+
+while(state){
+	const input = prompt('[TODO LIST]\n1) 할 일 목록 보기\n2) 할 일 추가하기\n3) 할 일 제거하기\n4) 종료하기', '')
+
+	switch(Number(input)){
+		case 1:
+			alert(todos)
+			break
+
+		case 2:
+			const add = prompt('추가할 할 일을 적어주세요', '')
+			todos.push(add)
+			break
+
+		case 3:
+			const remove = prompt(`${todos}\n제거할 할 일의 번호를 적어주세요`, '')
+			todos.splice(remove - 1, 1)
+			break
+
+		case 4:
+			state = false
+			break
+
+//		default:
+//			break
+	}
+} 
+</script>
+</head>
+<body></body>
+</html>
