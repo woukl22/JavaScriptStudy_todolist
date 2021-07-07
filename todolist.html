@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+<title></title>
+<script>
+
+const todos = ['공부하기', '청소하기', '과제하기']
+
+let state = true
+
+while(state){
+	const input = prompt('[TODO LIST]\n1) 할 일 목록 보기\n2) 할 일 추가하기\n3) 할 일 제거하기\n4) 할 일 초기화\n5) 종료하기', '')
+	let todo_list = ''
+	
+	switch(Number(input)){
+		case 1:
+			for (const i in todos) {
+				todo_list += `${Number(i)+1}. ${todos[i]}\n`
+			}
+			alert(todo_list)
+			break
+
+		case 2:
+			for (const i in todos) {
+				todo_list += `${Number(i)+1}. ${todos[i]}\n`
+			}
+			const add = prompt(`${todo_list}\n추가할 할 일을 적어주세요`, '')
+			todos.push(add)
+			break
+
+		case 3:
+			for (const i in todos) {
+				todo_list += `${Number(i)+1}. ${todos[i]}\n`
+			}
+			const remove = prompt(`${todo_list}\n제거할 할 일의 번호를 적어주세요`, '')
+			todos.splice(remove - 1, 1)
+			break
+
+		case 4:
+			todos.splice(0, todos.length)
+			break
+
+		case 5:
+			state = false
+			window.close()
+			break 
+	}
+}
+</script>
+</head>
+<body></body>
+</html>
