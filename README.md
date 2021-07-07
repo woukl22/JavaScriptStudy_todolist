@@ -1,2 +1,3 @@
-# JSstudy_todolist
-todolist with JavaScriptJS self study
+# JavaSciptStudy_todolist
+todolist with JavaScript
+JS self study
