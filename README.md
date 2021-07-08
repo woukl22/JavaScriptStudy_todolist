@@ -1,9 +1,9 @@
-# JavaScriptStudy_todolist
+## JavaScriptStudy_todolist
 To do list with JavaScript
 
 JavaScript self-study
 
-# Book
+## Book
 '***혼자 공부하는 자바스크립트***(한빛미디어, 2021)'
 
 ![hongongjs](https://user-images.githubusercontent.com/69896250/124748870-95ea1d00-df5e-11eb-9e98-5aba9280f9f4.jpeg)
@@ -31,7 +31,7 @@ JavaScript self-study
 ###### Chapter 10 리액트 라이브러리
 
 
-# Study Log
+## Study Log
 *2021.07.05 Mon.* ~Chapter 04-1 배열, todolist.html upload(2021.07.07)
   - ***switch 조건문**을 사용하여 기능 수행*
   - ***할 일 목록**을 배열로 만들어 push()와 splice()를 이용하여 목록 추가, 제거*
@@ -46,3 +46,9 @@ JavaScript self-study
   - ***'use strict'** 를 사용하여 **엄격모드** 적용*
   - ***할 일 목록**을 순서대로 번호 붙여 출력하는 기능을 **callList()** 함수로 만들었음*
   - ***callList()** 함수를 **forEach()** 메소드와 **화살표 함수**를 사용하여 만들었음*
+
+*2021.07.08 Thu.* ~ Chapter 06 객체, todolist.html v4 upload(2021.07.08)
+  - ***todo_object** 객체를 생성하여, **todos**, **todo_list**, **specialTodos** 속성을 만들었음*
+  - *중요한 할 일 **목록 보기**, 중요한 할 일 **지정하기**, 중요한 할 일 **초기화** 추가*
+  - ***중요한 할 일 지정하기**에서 **배열 전개 연산자 ([\.\.\.배열])** 를 이용하여 **깊은 복사**를 사용함*
+  - ***중요한 할 일 지정하기**에서 **.split()** 을 사용하여 **콤마(,)** 를 기준으로 입력 받은 문자열 값을 잘라서 새로운 배열에 저장함*
