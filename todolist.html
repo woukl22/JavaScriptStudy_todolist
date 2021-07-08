@@ -7,39 +7,61 @@
 
 'use strict'
 
-const todos = ['공부하기', '청소하기', '과제하기']
+// todo_object 객체 생성
+const todo_object = {
+    todos: ['공부하기', '청소하기', '과제하기'],
+    todo_list: '',
+    specialTodos: []
+}
+
 let state = true
 
 while(state){
-	let todo_list = ''
-    const input = prompt('[TODO LIST]\n1) 할 일 목록 보기\n2) 할 일 추가하기\n3) 할 일 제거하기\n4) 할 일 초기화\n5) 종료하기', '')
+    const input = prompt('[TODO LIST]\n1) 할 일 목록 보기\n2) 할 일 추가하기\n3) 할 일 제거하기\n4) 할 일 초기화 \n5) 중요한 할 일 지정하기\n6) 중요한 할 일 목록 보기 \n7) 중요한 할 일 초기화\n8) 종료하기', '')
     
 	switch(Number(input)){
-		case 1:
-			alert(callList(todos, todo_list))
+		case 1: // 할 일 목록 보기
+			alert(callList(todo_object.todos, todo_object.todo_list))
 			break
 
-		case 2:
-			const add = prompt(`${callList(todos, todo_list)}\n추가할 할 일을 적어주세요`, '')
-			todos.push(add)
+		case 2: // 할 일 추가하기
+			const add = prompt(`${callList(todo_object.todos, todo_object.todo_list)}\n추가할 할 일을 적어주세요`, '')
+			todo_object.todos.push(add.trim())
 			break
 
-		case 3:
-			const remove = prompt(`${callList(todos, todo_list)}\n제거할 할 일의 번호를 적어주세요`, '')
-			todos.splice(remove - 1, 1)
+		case 3: // 할 일 제거하기
+			const remove = prompt(`${callList(todo_object.todos, todo_object.todo_list)}\n제거할 할 일의 번호를 적어주세요`, '')
+			todo_object.todos.splice(remove - 1, 1)
 			break
 
-		case 4:
-			todos.splice(0, todos.length)
+        case 4: // 할 일 초기화
+            todo_object.todos.splice(0, todo_object.todos.length)
 			break
 
-		case 5:
+        case 5: // 중요한 할 일 지정하기
+            const special_add = prompt(`${callList(todo_object.todos, todo_object.todo_list)}\n중요한 할 일로 지정할 항목의 번호를 적어주세요\n* 여러 항목을 한 번에 지정할 경우 ,(콤마)로 구분해주세요`, '')
+            const special_num = [...special_add.split(',')]
+            special_num.forEach((value) => {
+                todo_object.specialTodos.push(todo_object.todos[Number(value) - 1])
+            })           
+            break
+
+        case 6: // 중요한 할 일 목록 보기
+            const important_list = confirm(`${callList(todo_object.specialTodos, todo_object.todo_list)}\n중요한 할 일 목록입니다`, '')
+            break
+
+		case 7: // 중요한 할 일 초기화
+            todo_object.specialTodos.splice(0, todo_object.specialTodos.length)
+            break
+
+		case 8: // 종료하기
 			state = false
 			window.close()
 			break 
 	}
 }
 
+// 목록 보여주기 함수
 function callList(todos, todo_list){
     todos.forEach((value, index) => {
         todo_list += `${Number(index)+1}. ${value}\n`
