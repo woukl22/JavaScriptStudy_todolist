@@ -4,72 +4,49 @@
 <head>
 <title></title>
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.querySelector('input')
+        const addButton = document.querySelector('#add')
+        const todoList = document.querySelector('#todoList')
+        
+        // 할 일 개수 세기
+        let count = 0
 
-'use strict'
+        // 추가 버튼 클릭 이벤트
+        addButton.addEventListener('click', (event) =>{
+            // 할 일 개수 증가
+            count++
 
-// todo_object 객체 생성
-const todo_object = {
-    todos: ['공부하기', '청소하기', '과제하기'],
-    todo_list: '',
-    specialTodos: []
-}
+            const item = document.createElement('div')
+            const text = document.createElement('span')
+            const removeButton = document.createElement('button')
+            const importantButton = document.createElement('button')
 
-let state = true
+            text.textContent = `${count}. ${input.value}`
+            removeButton.textContent = '제거'
+            importantButton.textContent = '★'
 
-while(state){
-    const input = prompt('[TODO LIST]\n1) 할 일 목록 보기\n2) 할 일 추가하기\n3) 할 일 제거하기\n4) 할 일 초기화 \n5) 중요한 할 일 지정하기\n6) 중요한 할 일 목록 보기 \n7) 중요한 할 일 초기화\n8) 종료하기', '')
-    
-	switch(Number(input)){
-		case 1: // 할 일 목록 보기
-			alert(callList(todo_object.todos, todo_object.todo_list))
-			break
-
-		case 2: // 할 일 추가하기
-			const add = prompt(`${callList(todo_object.todos, todo_object.todo_list)}\n추가할 할 일을 적어주세요`, '')
-			todo_object.todos.push(add.trim())
-			break
-
-		case 3: // 할 일 제거하기
-			const remove = prompt(`${callList(todo_object.todos, todo_object.todo_list)}\n제거할 할 일의 번호를 적어주세요`, '')
-			todo_object.todos.splice(remove - 1, 1)
-			break
-
-        case 4: // 할 일 초기화
-            todo_object.todos.splice(0, todo_object.todos.length)
-			break
-
-        case 5: // 중요한 할 일 지정하기
-            const special_add = prompt(`${callList(todo_object.todos, todo_object.todo_list)}\n중요한 할 일로 지정할 항목의 번호를 적어주세요\n* 여러 항목을 한 번에 지정할 경우 ,(콤마)로 구분해주세요`, '')
-            const special_num = [...special_add.split(',')]
-            special_num.forEach((value) => {
-                todo_object.specialTodos.push(todo_object.todos[Number(value) - 1])
-            })           
-            break
-
-        case 6: // 중요한 할 일 목록 보기
-            const important_list = confirm(`${callList(todo_object.specialTodos, todo_object.todo_list)}\n중요한 할 일 목록입니다`, '')
-            break
-
-		case 7: // 중요한 할 일 초기화
-            todo_object.specialTodos.splice(0, todo_object.specialTodos.length)
-            break
-
-		case 8: // 종료하기
-			state = false
-			window.close()
-			break 
-	}
-}
-
-// 목록 보여주기 함수
-function callList(todos, todo_list){
-    todos.forEach((value, index) => {
-        todo_list += `${Number(index)+1}. ${value}\n`
+            item.setAttribute('id', count)
+            item.appendChild(text)
+            item.appendChild(removeButton)
+            item.appendChild(importantButton)
+            todoList.appendChild(item)
+        })
     })
-    return todo_list
-}
-
+    
 </script>
 </head>
-<body></body>
+<body>
+    <h1>To Do List!</h1>
+    <hr>
+    <input type="text">
+    <button id="add">추가</button>
+    <select>
+        <option>전체 할 일 목록</option>
+        <option>중요한 할 일 목록</option>
+    </select>
+    <div id="todoList">
+
+    </div>
+</body>
 </html>
