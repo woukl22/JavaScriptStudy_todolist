@@ -5,52 +5,75 @@
 <title></title>
 <script>
 
-    class todo {
-        constructor (input) {
-            text = document.body.todo.createElement('span')
-            text.setAttribute(id, '1')
-            removeButton = text.createElement('button')
-            specialButton = text.createElement('button')
+    class Todo {
+        constructor (todoList, input, id, removeButton) {
+            this.id = id
+            this.span = document.getElementById('todo').appendChild(document.createElement('span'))
+            this.span.setAttribute('id', id)
+            document.getElementById('todo').appendChild(document.createElement('br'))
+        
+            this.span.innerHTML = `${id}. ${input}&nbsp;`
 
-            text.textContent = `${input.value}`
-            removeButton.textContent = '제거'
-            specialButton.textContent = '★'
+            this.removeButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
+            this.specialButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
+            this.removeButton.textContent = 'remove'
+            this.specialButton.textContent = '☆'
+            this.removeButton.setAttribute('id', 'removeButton')
+            this.specialButton.setAttribute('id', 'specialButton')
+        }
 
-            todoList.appendChild(text)
-
+        clickRemove() {
+            this.removeButton.addEventListener('click', (event) => {
+                //document.getElementById('todo').removeChild(this.span)
+                console.log('a')
+            })
         }
     }
 
+    class SpecialTodo extends Todo {
+
+    }
+
+    class Done extends Todo {
+
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        const todoArray = []
+
         const input = document.querySelector('input')               // text input
         const dropdown = document.querySelector('select')           // dropdown list
         const addButton = document.querySelector('#add')            // add button
-        
+        let removeButton = document.querySelectorAll('#removeButton')     // remove button
+
         const todoList = document.querySelector('#todo')            // To do list div
         const specialTodo = document.querySelector('#special')      // Special todo div
         const doneList = document.querySelector('#done')            // Done div
-        
+
         // count todo
-        let count = 0
+        let count = document.getElementById('todo').childElementCount/2     // childElement: <span> & <br>
 
         // dropdown
         dropdown.addEventListener('change', (event) => {
             const dropdownIndex = event.currentTarget.options.selectedIndex   // dropdown index
-            
+
             switch(dropdownIndex){
                 case 0:         // show 'To do list'
+                    document.getElementById("title").textContent = "To Do List"
                     document.getElementById("todo").style.display="block"
                     document.getElementById("special").style.display="none"
                     document.getElementById("done").style.display="none"
                     break
-                
+
                 case 1:         // show 'Special todo'
+                    document.getElementById("title").textContent = "Special Todo"
                     document.getElementById("todo").style.display="none"
                     document.getElementById("special").style.display="block"
                     document.getElementById("done").style.display="none"
                     break
-                
+
                 case 2:         // show 'Done'
+                    document.getElementById("title").textContent = "Done"
                     document.getElementById("todo").style.display="none"
                     document.getElementById("special").style.display="none"
                     document.getElementById("done").style.display="block"
@@ -60,34 +83,24 @@
 
         // add button click event
         addButton.addEventListener('click', (event) =>{
-            // todo increase
             count++
-            todo(input)
-            /*
-            const item = document.createElement('div')
-            const text = document.createElement('span')
-            const removeButton = document.createElement('button')
-            const importantButton = document.createElement('button')
-
-            text.textContent = `${count}. ${input.value}`
-            removeButton.textContent = '제거'
-            importantButton.textContent = '★'
-
-            item.setAttribute('id', count)
-            item.appendChild(text)
-            item.appendChild(removeButton)
-            item.appendChild(importantButton)
-            todoList.appendChild(item)*/
+            todoArray.push(new Todo(todoList, input.value, count, removeButton))
+            removeButton = document.querySelectorAll('#removeButton')
         })
-
         
+        // remove button click event
+        removeButton.forEach((value) => {
+            value.addEventListener('click', (event) => {
+            console.log(event.currentTarget)
+            })
+        })
     })
     
 </script>
 </head>
 <body>
     <!-- Title -->
-    <h1>To Do List!</h1>
+    <h1 id="title">To Do List!</h1>
 
     <!-- input text && add button && dropdown -->
     <hr>
@@ -103,14 +116,12 @@
 
     <!-- To do list -->
     <div id="todo">
-        <span id="1">1. Study&nbsp;
-            <button>remove</button>
-            <button>☆</button>
+        <span id="1">1. Study&nbsp;<button id="removeButton">remove</button>
+            <button id="specialButton">☆</button>
         </span><br>
-        <span id="2">2. Soccer&nbsp;
-                <button>remove</button>
-                <button>☆</button>
-            </span><br>
+        <span id="2">2. Soccer&nbsp;<button id="removeButton">remove</button>
+            <button id="specialButton">☆</button>
+        </span><br>
     </div>
 
     <!-- Special todo -->
