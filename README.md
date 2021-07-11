@@ -55,6 +55,17 @@ JavaScript self-study
   - ***중요한 할 일 지정하기**에서 String 객체의 기본 메소드 **.split()** 을 사용하여 **콤마(,)** 를 기준으로 입력 받은 문자열 값을 잘라서 새로운 배열에 저장함*
 
 *2021.07.09 Fri.* ~ Chapter 07 문서 객체 모델, todolist.html v5 upload(2021.07.09)
-  - *html의 **head**부분만 사용하는 방식에서 **body**부분까지 사용하도록 변경함*
+  - ***DOMContentLoaded**을 사용하여 자바스크립트로 *<body*> 안에 있는 **HTML 코드**를 조작함*
+  - ***querySelector()** 메소드를 사용하여 html 요소를 **추출**하여 사용함*
+  - ***querySelector()** 메소드 안에서 **'input'**과 **'#add'** 등 CSS 선택자의 **태그 선택자**와 **아이디 선택자**를 사용함*
+  - ***addEventListener()** 메소드를 사용하여 **addButton 클릭 시** 할 일이 추가되도록 함*
+  - ***document.createElement()** 메소드와 **setAttribute()** 를 사용하여 새로운 문서객체를 생성하고, 속성을 부여함*
+  - ***appendChild()** 를 사용하여 ***<div id*="todoList"*>** *아래에 새로 만든 문서객체를 추가함*
 
 *2021.07.10 Sat.* ~ Chapter 09 클래스, todolist.html v6 upload(2021.07.10)
+  - ***Todo 클래스**를 만들어 할 일을 **인스턴스**로 생성하도록 함*
+  - ***드롭다운 목록**을 활용하여 **할 일 목록(To do list), 중요한 할 일(Special todo), 완료된 할 일(Done)** 을 볼 수 있도록 함*
+  - *드롭다운 목록에서 항목이 선택되면 **style.display="none"** 과 **style.display="block"** 을 사용하여 각 항목에 대한 화면으로 바뀌도록 함*
+  - *드롭다운 목록에서 항목이 선택되면 페이지 상단에 있는 **제목**이 각 항목의 이름과 같게 바뀌도록 함*
+  - ***addButton.addEventListener()** 을 사용하여 addButton이 눌리면, **new Todo()** 를 사용하여 **할 일 인스턴스**를 생성함*
+  - *removeButton과 관련된 이벤트와 메소드는 아직 미완성*
