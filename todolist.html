@@ -4,15 +4,21 @@
 <head>
 <title></title>
 <script>
+    const todoArray = []
+    let todoCount = 1
+    let specialCount = 1
+    let doneCount = 1
 
     class Todo {
-        constructor (todoList, input, id, removeButton) {
+        constructor (todoList, id, input) {
+            this.todoList = todoList
             this.id = id
             this.span = document.getElementById('todo').appendChild(document.createElement('span'))
             this.span.setAttribute('id', id)
-            document.getElementById('todo').appendChild(document.createElement('br'))
+            this.br = document.getElementById('todo').appendChild(document.createElement('br'))
+            this.br.setAttribute('id', id)
         
-            this.span.innerHTML = `${id}. ${input}&nbsp;`
+            this.span.innerHTML = `- ${input}&nbsp;`
 
             this.removeButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
             this.specialButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
@@ -20,12 +26,12 @@
             this.specialButton.textContent = '☆'
             this.removeButton.setAttribute('id', 'removeButton')
             this.specialButton.setAttribute('id', 'specialButton')
-        }
 
-        clickRemove() {
             this.removeButton.addEventListener('click', (event) => {
-                //document.getElementById('todo').removeChild(this.span)
-                console.log('a')
+                this.todoList.removeChild(this.span)
+                this.todoList.removeChild(this.br)
+                todoArray.splice(todoArray.indexOf(this), 1)
+                todoCount--
             })
         }
     }
@@ -39,19 +45,17 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const todoArray = []
-
         const input = document.querySelector('input')               // text input
         const dropdown = document.querySelector('select')           // dropdown list
         const addButton = document.querySelector('#add')            // add button
-        let removeButton = document.querySelectorAll('#removeButton')     // remove button
 
         const todoList = document.querySelector('#todo')            // To do list div
         const specialTodo = document.querySelector('#special')      // Special todo div
         const doneList = document.querySelector('#done')            // Done div
 
-        // count todo
-        let count = document.getElementById('todo').childElementCount/2     // childElement: <span> & <br>
+        // default to do
+        todoArray.push(new Todo(todoList, todoCount++, 'Study'))
+        todoArray.push(new Todo(todoList, todoCount++, 'Computer Game :)'))
 
         // dropdown
         dropdown.addEventListener('change', (event) => {
@@ -80,20 +84,36 @@
                     break
             }  
         })
-
+        console.log(dropdown.value)
         // add button click event
         addButton.addEventListener('click', (event) =>{
-            count++
-            todoArray.push(new Todo(todoList, input.value, count, removeButton))
-            removeButton = document.querySelectorAll('#removeButton')
+            switch(dropdown.value){
+                case 'To do list':
+                    addButtonClick(todoArray, todoList, todoCount)
+                    break
+
+                case 'Special todo':
+                    input.value = ''
+                    break
+
+                case 'Done':
+                    input.value = ''
+                    break
+            }
         })
         
-        // remove button click event
-        removeButton.forEach((value) => {
-            value.addEventListener('click', (event) => {
-            console.log(event.currentTarget)
-            })
-        })
+        const addButtonClick = (arr, list, count) => {
+            try {
+                if(input.value.trim() === ''){
+                    throw 'Nothing to add'
+                }
+                arr.push(new Todo(list, count++, input.value.trim()))
+                input.value = ''
+            } catch (error) {
+                alert('Please enter something to do.')
+                input.value = ''
+            }
+        }
     })
     
 </script>
@@ -116,12 +136,7 @@
 
     <!-- To do list -->
     <div id="todo">
-        <span id="1">1. Study&nbsp;<button id="removeButton">remove</button>
-            <button id="specialButton">☆</button>
-        </span><br>
-        <span id="2">2. Soccer&nbsp;<button id="removeButton">remove</button>
-            <button id="specialButton">☆</button>
-        </span><br>
+        
     </div>
 
     <!-- Special todo -->
