@@ -4,60 +4,118 @@
 <head>
 <title></title>
 <script>
+    /*  Global variable */
     const todoArray = []
+    const importantArray = []
+    const doneArray = []
+
     let todoCount = 1
-    let specialCount = 1
+    let importantCount = 1
     let doneCount = 1
 
+    /* Todo Class */
     class Todo {
-        constructor (todoList, id, input) {
+        constructor (todoList, id, input, importantList, doneList) {
             this.todoList = todoList
             this.id = id
+            this.input = input
+            this.importantList = importantList
+            this.doneList = doneList
+            todoCount++
+
+            /* Create span */
             this.span = document.getElementById('todo').appendChild(document.createElement('span'))
             this.span.setAttribute('id', id)
-            this.br = document.getElementById('todo').appendChild(document.createElement('br'))
-            this.br.setAttribute('id', id)
-        
             this.span.innerHTML = `- ${input}&nbsp;`
 
-            this.removeButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
-            this.specialButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
-            this.removeButton.textContent = 'remove'
-            this.specialButton.textContent = '☆'
-            this.removeButton.setAttribute('id', 'removeButton')
-            this.specialButton.setAttribute('id', 'specialButton')
+            this.br = document.getElementById('todo').appendChild(document.createElement('br'))
+            this.br.setAttribute('id', id)
 
-            this.removeButton.addEventListener('click', (event) => {
-                this.todoList.removeChild(this.span)
-                this.todoList.removeChild(this.br)
-                todoArray.splice(todoArray.indexOf(this), 1)
-                todoCount--
+            /* Create delete button */
+            this.deleteButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
+            this.deleteButton.setAttribute('id', 'deleteButton')
+            this.deleteButton.textContent = '🗑️'
+
+            /* Create done button */
+            this.doneButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
+            this.doneButton.setAttribute('id', 'doneButton')
+            this.doneButton.textContent = '🗸'
+
+            /* Create important button */
+            this.importantButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
+            this.importantButton.setAttribute('id', 'importantButton')
+            this.importantButton.textContent = '☆'
+
+            /* Delete button click event */
+            this.deleteButton.addEventListener('click', (event) => {
+                switch (document.querySelector('select').selectedIndex){
+                    case 0:     // 'To do list'
+                        if(this.isChecked()){
+                            importantArray.splice(importantArray.indexOf(this), 1)
+                        }
+                        this.todoList.removeChild(this.span)
+                        this.todoList.removeChild(this.br)
+                        todoArray.splice(todoArray.indexOf(this), 1)
+                        break
+
+                    case 2:     // 'Done'
+                        this.doneList.removeChild(this.span)
+                        this.doneList.removeChild(this.br)
+                        doneArray.splice(doneArray.indexOf(this), 1)
+                        break
+                }
             })
+
+            /* Done button click event*/
+            this.doneButton.addEventListener('click', (event) => {
+                if (this.isChecked()){
+                    importantArray.splice(importantArray.indexOf(this), 1)
+                }
+                this.doneList.appendChild(this.span)
+                this.doneList.appendChild(this.br)
+                this.span.removeChild(this.importantButton)
+                this.span.removeChild(this.doneButton)
+                doneArray.push(this)
+                todoArray.splice(todoArray.indexOf(this), 1)
+            })
+
+            /* Important button click event */
+            this.importantButton.addEventListener('click', (event) => {
+                if(!this.isChecked()){
+                    this.importantButton.textContent = '★'
+                    importantArray.push(this)
+                } else if (this.isChecked()) {
+                    this.importantButton.textContent = '☆'
+                    importantArray.splice(importantArray.indexOf(this), 1)
+                }
+            })
+        }
+
+        /* Check important button is checked */
+        isChecked() {
+            if(this.importantButton.innerText === '☆'){
+                return false
+            } else if (this.importantButton.innerText === '★'){
+                return true
+            }
         }
     }
 
-    class SpecialTodo extends Todo {
-
-    }
-
-    class Done extends Todo {
-
-    }
-
+    /* DOMContentLoaded event */
     document.addEventListener('DOMContentLoaded', () => {
         const input = document.querySelector('input')               // text input
         const dropdown = document.querySelector('select')           // dropdown list
         const addButton = document.querySelector('#add')            // add button
 
         const todoList = document.querySelector('#todo')            // To do list div
-        const specialTodo = document.querySelector('#special')      // Special todo div
+        const importantList = document.querySelector('#important')      // Important div
         const doneList = document.querySelector('#done')            // Done div
 
-        // default to do
-        todoArray.push(new Todo(todoList, todoCount++, 'Study'))
-        todoArray.push(new Todo(todoList, todoCount++, 'Computer Game :)'))
+        /* Default to do */
+        todoArray.push(new Todo(todoList, todoCount++, 'Study', importantList, doneList))
+        todoArray.push(new Todo(todoList, todoCount++, 'Computer Game :)', importantList, doneList))
 
-        // dropdown
+        /* Dropdown */
         dropdown.addEventListener('change', (event) => {
             const dropdownIndex = event.currentTarget.options.selectedIndex   // dropdown index
 
@@ -65,49 +123,42 @@
                 case 0:         // show 'To do list'
                     document.getElementById("title").textContent = "To Do List"
                     document.getElementById("todo").style.display="block"
-                    document.getElementById("special").style.display="none"
+                    document.getElementById("important").style.display="none"
                     document.getElementById("done").style.display="none"
+                    document.getElementById("textInput").style.display="block"
                     break
 
-                case 1:         // show 'Special todo'
-                    document.getElementById("title").textContent = "Special Todo"
+                case 1:         // show 'Important'
+                    document.getElementById("title").textContent = "Important"
                     document.getElementById("todo").style.display="none"
-                    document.getElementById("special").style.display="block"
+                    document.getElementById("important").style.display="block"
                     document.getElementById("done").style.display="none"
+                    document.getElementById("textInput").style.display="none"
                     break
 
                 case 2:         // show 'Done'
                     document.getElementById("title").textContent = "Done"
                     document.getElementById("todo").style.display="none"
-                    document.getElementById("special").style.display="none"
+                    document.getElementById("important").style.display="none"
                     document.getElementById("done").style.display="block"
+                    document.getElementById("textInput").style.display="none"
                     break
             }  
         })
-        console.log(dropdown.value)
-        // add button click event
-        addButton.addEventListener('click', (event) =>{
-            switch(dropdown.value){
-                case 'To do list':
-                    addButtonClick(todoArray, todoList, todoCount)
-                    break
 
-                case 'Special todo':
-                    input.value = ''
-                    break
-
-                case 'Done':
-                    input.value = ''
-                    break
-            }
+        /* Add button click event*/
+        addButton.addEventListener('click', (event) =>{         // add button click event
+            todoCount++
+            addButtonClick(todoArray, todoList, todoCount)
         })
-        
-        const addButtonClick = (arr, list, count) => {
+
+        /* Add button click method */
+        const addButtonClick = (arr, list, count) => {          // addButtonClick() method
             try {
                 if(input.value.trim() === ''){
                     throw 'Nothing to add'
                 }
-                arr.push(new Todo(list, count++, input.value.trim()))
+                arr.push(new Todo(todoList, count, input.value.trim(), importantList, doneList))
                 input.value = ''
             } catch (error) {
                 alert('Please enter something to do.')
@@ -115,40 +166,37 @@
             }
         }
     })
-    
+
 </script>
 </head>
 <body>
     <!-- Title -->
     <h1 id="title">To Do List!</h1>
 
-    <!-- input text && add button && dropdown -->
-    <hr>
-    <input type="text">
-    <button id="add">Add</button>
-    <select>
-        <option>To do list</option>
-        <option>Special todo</option>
-        <option>Done</option>
+
+    <!-- Dropdown -->
+    <select style="float: right">
+            <option>To do list</option>
+            <option>Important</option>
+            <option>Done</option>
     </select>
     <hr>
 
+    <!-- Input text && add button -->
+    <div id="textInput">
+        <input type="text">
+        <button id="add">Add</button>
+        <hr>
+    </div>
+
 
     <!-- To do list -->
-    <div id="todo">
-        
-    </div>
+    <div id="todo"></div>
 
-    <!-- Special todo -->
-    <div id="special" style="display:none">
-        
-
-    </div>
+    <!-- Important -->
+    <div id="important" style="display:none"></div>
 
     <!-- Done -->
-    <div id="done" style="display:none">
-        
-
-    </div>
+    <div id="done" style="display:none"></div>
 </body>
 </html>
