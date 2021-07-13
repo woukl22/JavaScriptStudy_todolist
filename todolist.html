@@ -47,24 +47,7 @@
             this.importantButton.textContent = '☆'
 
             /* Delete button click event */
-            this.deleteButton.addEventListener('click', (event) => {
-                switch (document.querySelector('select').selectedIndex){
-                    case 0:     // 'To do list'
-                        if(this.isChecked()){
-                            importantArray.splice(importantArray.indexOf(this), 1)
-                        }
-                        this.todoList.removeChild(this.span)
-                        this.todoList.removeChild(this.br)
-                        todoArray.splice(todoArray.indexOf(this), 1)
-                        break
-
-                    case 2:     // 'Done'
-                        this.doneList.removeChild(this.span)
-                        this.doneList.removeChild(this.br)
-                        doneArray.splice(doneArray.indexOf(this), 1)
-                        break
-                }
-            })
+            this.deleteButtonClick()
 
             /* Done button click event*/
             this.doneButton.addEventListener('click', (event) => {
@@ -83,10 +66,31 @@
             this.importantButton.addEventListener('click', (event) => {
                 if(!this.isChecked()){
                     this.importantButton.textContent = '★'
-                    importantArray.push(this)
+                    this.importantTodo = new ImportantTodo(this)
                 } else if (this.isChecked()) {
                     this.importantButton.textContent = '☆'
-                    importantArray.splice(importantArray.indexOf(this), 1)
+                    this.importantTodo.removeImportant()
+                }
+            })
+        }
+
+        deleteButtonClick() {
+            this.deleteButton.addEventListener('click', (event) => {
+                switch (document.querySelector('select').selectedIndex){
+                    case 0:     // 'To do list'
+                        if(this.isChecked()){
+                            importantArray.splice(importantArray.indexOf(this), 1)
+                        }
+                        this.todoList.removeChild(this.span)
+                        this.todoList.removeChild(this.br)
+                        todoArray.splice(todoArray.indexOf(this), 1)
+                        break
+
+                    case 2:     // 'Done'
+                        this.doneList.removeChild(this.span)
+                        this.doneList.removeChild(this.br)
+                        doneArray.splice(doneArray.indexOf(this), 1)
+                        break
                 }
             })
         }
@@ -98,6 +102,54 @@
             } else if (this.importantButton.innerText === '★'){
                 return true
             }
+        }
+    }
+
+    class ImportantTodo {
+        constructor(todoObject) {
+            this.todoObject = todoObject
+            importantArray.push(this.todoObject)
+
+            /* Create span */
+            this.span = document.getElementById('important').appendChild(document.createElement('span'))
+            this.span.setAttribute('id', `${todoObject.id}_important`)
+            this.span.innerHTML = `- ${todoObject.input}&nbsp;`
+
+            this.br = document.getElementById('important').appendChild(document.createElement('br'))
+            this.br.setAttribute('id', `${todoObject.id}_important`)
+
+            /* Create delete button */
+            this.deleteButton = document.getElementById(`${todoObject.id}_important`).appendChild(document.createElement('button'))
+            this.deleteButton.setAttribute('id', 'deleteButton_important')
+            this.deleteButton.textContent = '🗑️'
+
+            /* Create important button */
+            this.importantButton = document.getElementById(`${todoObject.id}_important`).appendChild(document.createElement('button'))
+            this.importantButton.setAttribute('id', 'importantButton_important')
+            this.importantButton.textContent = '★'
+
+            /* Delete button click event */
+            this.deleteButton.addEventListener('click', (event) => {
+                todoObject.deleteButtonClick()
+                this.removeImportant()
+            })
+
+            /* Important button click event */
+            this.importantButton.addEventListener('click', (event) => {
+                if(this.importantButton.innerText === '★'){
+                    todoObject.importantButton.textContent = '☆'
+                    this.removeImportant()
+                }
+            })
+        }
+
+        /* Remove important todo */
+        removeImportant() {
+            importantArray.splice(importantArray.indexOf(this.todoObject), 1)
+            this.span.removeChild(this.deleteButton)
+            this.span.removeChild(this.importantButton)
+            document.getElementById('important').removeChild(this.span)
+            document.getElementById('important').removeChild(this.br)
         }
     }
 
@@ -152,6 +204,15 @@
             addButtonClick(todoArray, todoList, todoCount)
         })
 
+        /* Enter key click add button */
+        input.addEventListener("keyup", (event) => {
+            if (event.keyCode === 13) {
+                event.preventDefault()
+                todoCount++
+                addButtonClick(todoArray, todoList, todoCount)
+            }
+        })
+
         /* Add button click method */
         const addButtonClick = (arr, list, count) => {          // addButtonClick() method
             try {
@@ -186,6 +247,7 @@
     <div id="textInput">
         <input type="text">
         <button id="add">Add</button>
+        <span style="float:right"> 🗑:delete️, 🗸:done, ☆:important</span>
         <hr>
     </div>
 
