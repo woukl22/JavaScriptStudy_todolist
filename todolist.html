@@ -23,80 +23,111 @@
             this.doneList = doneList
             todoCount++
 
-            /* Create span */
+            /* Create span & br */
             this.span = document.getElementById('todo').appendChild(document.createElement('span'))
             this.span.setAttribute('id', id)
             this.span.innerHTML = `- ${input}&nbsp;`
-
             this.br = document.getElementById('todo').appendChild(document.createElement('br'))
             this.br.setAttribute('id', id)
 
-            /* Create delete button */
+            /* Create delete, done, important, undo button */
             this.deleteButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
             this.deleteButton.setAttribute('id', 'deleteButton')
             this.deleteButton.textContent = '🗑️'
 
-            /* Create done button */
             this.doneButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
             this.doneButton.setAttribute('id', 'doneButton')
             this.doneButton.textContent = '🗸'
 
-            /* Create important button */
             this.importantButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
             this.importantButton.setAttribute('id', 'importantButton')
             this.importantButton.textContent = '☆'
 
-            /* Delete button click event */
-            this.deleteButtonClick()
+            this.undoButton = document.getElementById(`${id}`).appendChild(document.createElement('button'))
+            this.undoButton.setAttribute('id', 'undoButton')
+            this.undoButton.textContent = '↩️'
+            this.undoButton.style.display="none"
 
-            /* Done button click event*/
-            this.doneButton.addEventListener('click', (event) => {
-                if (this.isChecked()){
-                    importantArray.splice(importantArray.indexOf(this), 1)
+            /* Delete button click event */
+            this.deleteButton.addEventListener('click', (event) => {
+                switch (document.querySelector('select').selectedIndex){
+                    case 0:     // 'To do list'
+                        if(this.isImportantChecked()){
+                            importantArray.splice(importantArray.indexOf(this), 1)
+                            this.importantTodo.removeImportant()
+                        }
+                        this.deleteTodo('todo')
+                        break
+
+                    case 2:     // 'Done'
+                        this.deleteTodo('done')
+                        break
                 }
+            })
+
+            /* Done button click event */
+            this.doneButton.addEventListener('click', (event) => {
+                if (this.isImportantChecked()){
+                    importantArray.splice(importantArray.indexOf(this), 1)
+                    this.importantTodo.removeImportant()
+                }
+                
+                this.undoButton.style.display="inline-block"
+                this.importantButton.style.display="none"
+                this.doneButton.style.display="none"
                 this.doneList.appendChild(this.span)
                 this.doneList.appendChild(this.br)
-                this.span.removeChild(this.importantButton)
-                this.span.removeChild(this.doneButton)
+
                 doneArray.push(this)
                 todoArray.splice(todoArray.indexOf(this), 1)
             })
 
             /* Important button click event */
             this.importantButton.addEventListener('click', (event) => {
-                if(!this.isChecked()){
+                if(!this.isImportantChecked()){
                     this.importantButton.textContent = '★'
                     this.importantTodo = new ImportantTodo(this)
-                } else if (this.isChecked()) {
+                } else if (this.isImportantChecked()) {
                     this.importantButton.textContent = '☆'
                     this.importantTodo.removeImportant()
                 }
             })
-        }
 
-        deleteButtonClick() {
-            this.deleteButton.addEventListener('click', (event) => {
-                switch (document.querySelector('select').selectedIndex){
-                    case 0:     // 'To do list'
-                        if(this.isChecked()){
-                            importantArray.splice(importantArray.indexOf(this), 1)
-                        }
-                        this.todoList.removeChild(this.span)
-                        this.todoList.removeChild(this.br)
-                        todoArray.splice(todoArray.indexOf(this), 1)
-                        break
-
-                    case 2:     // 'Done'
-                        this.doneList.removeChild(this.span)
-                        this.doneList.removeChild(this.br)
-                        doneArray.splice(doneArray.indexOf(this), 1)
-                        break
+            /* Undo button click event */
+            this.undoButton.addEventListener('click', (event) => {
+                if(this.isImportantChecked()){
+                    this.importantTodo = new ImportantTodo(this)
                 }
+                this.undoButton.style.display="none"
+                this.importantButton.style.display="inline-block"
+                this.doneButton.style.display="inline-block"
+                this.todoList.appendChild(this.span)
+                this.todoList.appendChild(this.br)
+                todoArray.push(this)
+                doneArray.splice(todoArray.indexOf(this), 1)
             })
         }
 
-        /* Check important button is checked */
-        isChecked() {
+        /* Delete todo method */
+        deleteTodo(value) {
+            switch(value){
+                case 'todo':
+                    this.todoList.removeChild(this.span)
+                    this.todoList.removeChild(this.br)
+                    todoArray.splice(todoArray.indexOf(this), 1)
+                    break
+                
+                case 'done':
+                    this.doneList.removeChild(this.span)
+                    this.doneList.removeChild(this.br)
+                    doneArray.splice(doneArray.indexOf(this), 1)
+                    break
+            }
+            
+        }
+
+        /* Check important button is checked method*/
+        isImportantChecked() {
             if(this.importantButton.innerText === '☆'){
                 return false
             } else if (this.importantButton.innerText === '★'){
@@ -105,32 +136,31 @@
         }
     }
 
+    /* ImportantTodo Class */
     class ImportantTodo {
         constructor(todoObject) {
             this.todoObject = todoObject
             importantArray.push(this.todoObject)
 
-            /* Create span */
+            /* Create span & br */
             this.span = document.getElementById('important').appendChild(document.createElement('span'))
             this.span.setAttribute('id', `${todoObject.id}_important`)
             this.span.innerHTML = `- ${todoObject.input}&nbsp;`
-
             this.br = document.getElementById('important').appendChild(document.createElement('br'))
             this.br.setAttribute('id', `${todoObject.id}_important`)
 
-            /* Create delete button */
+            /* Create delete, important button */
             this.deleteButton = document.getElementById(`${todoObject.id}_important`).appendChild(document.createElement('button'))
             this.deleteButton.setAttribute('id', 'deleteButton_important')
             this.deleteButton.textContent = '🗑️'
 
-            /* Create important button */
             this.importantButton = document.getElementById(`${todoObject.id}_important`).appendChild(document.createElement('button'))
             this.importantButton.setAttribute('id', 'importantButton_important')
             this.importantButton.textContent = '★'
 
             /* Delete button click event */
             this.deleteButton.addEventListener('click', (event) => {
-                todoObject.deleteButtonClick()
+                todoObject.deleteTodo('todo')
                 this.removeImportant()
             })
 
@@ -232,19 +262,21 @@
 </head>
 <body>
     <!-- Title -->
-    <h1 id="title">To Do List!</h1>
+    <h1 id="title" style="text-align:center">To Do List!</h1>
 
 
     <!-- Dropdown -->
-    <select style="float: right">
-            <option>To do list</option>
-            <option>Important</option>
-            <option>Done</option>
-    </select>
+    <div style="text-align:right">
+        <select style="text-align-last: left; text-align:right">
+                <option>To do list</option>
+                <option>Important</option>
+                <option>Done</option>
+        </select>
+    </div>
     <hr>
 
     <!-- Input text && add button -->
-    <div id="textInput">
+    <div id="textInput" style="text-align:center">
         <input type="text">
         <button id="add">Add</button>
         <span style="float:right"> 🗑:delete️, 🗸:done, ☆:important</span>
